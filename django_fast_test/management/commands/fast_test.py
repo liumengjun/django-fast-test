@@ -17,7 +17,7 @@ class Command(BaseCommand):
     test_loader = unittest.defaultTestLoader
     verbosity = 1
     failfast = False
-    default_test_file = 'app.fast_tests'
+    default_test_file = 'app.fast_tests'  # TODO: 指定文件名或patter, 遍历django installed apps
 
     def add_arguments(self, parser):
         parser.add_argument(
