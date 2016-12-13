@@ -36,11 +36,17 @@ class Command(BaseCommand):
     failfast = False
     default_pattern = 'fast_test*.py'
 
+    def create_parser(self, prog_name, subcommand):
+        from argparse import RawTextHelpFormatter
+        parser = super(Command, self).create_parser(prog_name, subcommand)
+        parser.formatter_class = RawTextHelpFormatter
+        return parser
+
     def add_arguments(self, parser):
         parser.add_argument(
             'test_labels',
             nargs='*',
-            help='测试文件,类或方法。例如%s, 默认该工程加所有%s文件,' % ('app.tests.TestAlgorithm', self.default_pattern),
+            help='测试文件,类或方法。\n    例如%s, 默认该工程加所有%s文件,' % ('app.tests.TestAlgorithm', self.default_pattern),
         )
 
     def build_suite(self, test_labels=None):
