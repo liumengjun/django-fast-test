@@ -1,8 +1,25 @@
 import os
 import unittest
+from importlib import import_module
 
 from django.conf import settings
 from django.core.management.base import BaseCommand
+
+
+def is_discoverable(label):
+    """
+    Check if a test label points to a python package or file directory.
+
+    Relative labels like "." and ".." are seen as directories.
+    """
+    try:
+        mod = import_module(label)
+    except (ImportError, TypeError):
+        pass
+    else:
+        return hasattr(mod, '__path__')
+
+    return os.path.isdir(os.path.abspath(label))
 
 
 class Command(BaseCommand):
@@ -17,13 +34,14 @@ class Command(BaseCommand):
     test_loader = unittest.defaultTestLoader
     verbosity = 1
     failfast = False
+    default_pattern = 'fast_test*.py'
     default_test_file = 'app.fast_tests'  # TODO: 指定文件名或patter, 遍历django installed apps
 
     def add_arguments(self, parser):
         parser.add_argument(
             'test_labels',
             nargs='*',
-            help='测试文件,类或方法。例如%s, 默认%s,' %('app.tests.TestAlgorithm', self.default_test_file),
+            help='测试文件,类或方法。例如%s, 默认%s,' % ('app.tests.TestAlgorithm', self.default_test_file),
         )
 
     def build_suite(self, test_labels=None):
@@ -34,9 +52,15 @@ class Command(BaseCommand):
             label_as_path = os.path.abspath(label)
 
             # if a module, or "module.ClassName[.method_name]", just run those
-            if not os.path.exists(label_as_path):
+            if not os.path.exists(label_as_path) and is_discoverable(label):
                 tests = self.test_loader.loadTestsFromName(label)
                 suite.addTests(tests)
+            elif os.path.isdir(label_as_path):
+                tests = self.test_loader.discover(start_dir=label, pattern=self.default_pattern, top_level_dir='.')
+                suite.addTests(tests)
+                pass
+            else:  # isfile
+                pass
 
         return suite
 
