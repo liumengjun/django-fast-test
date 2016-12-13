@@ -25,6 +25,7 @@ def is_discoverable(label):
 class Command(BaseCommand):
     help = '''
     快速测试: 没有数据库migration的单元测试, 区别于django test.
+    fast_test: unittest that no run db migrations, differently from django test.
     但是连接的不是测试数据库, 而是实际开发用的数据库，对于数据库的操作会保留下来.
     因此最好不要测试含有数据库操作的代码，适用于"工具算法测试"或"第三方API测试".
     TODO: 对于这点，以后再优化.
@@ -46,7 +47,9 @@ class Command(BaseCommand):
         parser.add_argument(
             'test_labels',
             nargs='*',
-            help='测试文件,类或方法。\n    例如%s, 默认该工程加所有%s文件,' % ('app.tests.TestAlgorithm', self.default_pattern),
+            help='Module paths to test(测试文件,类或方法);\n'
+                 'Can be modulename, modulename.TestCase or modulename.TestCase.test_method\n'
+                 'Default all %s files in current project,' % self.default_pattern,
         )
 
     def build_suite(self, test_labels=None):
