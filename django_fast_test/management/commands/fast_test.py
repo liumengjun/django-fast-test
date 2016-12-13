@@ -50,17 +50,20 @@ class Command(BaseCommand):
 
         for label in test_labels:
             label_as_path = os.path.abspath(label)
+            tests = None
 
             # if a module, or "module.ClassName[.method_name]", just run those
-            if not os.path.exists(label_as_path) and is_discoverable(label):
+            if not os.path.exists(label_as_path):
                 tests = self.test_loader.loadTestsFromName(label)
-                suite.addTests(tests)
             elif os.path.isdir(label_as_path):
                 tests = self.test_loader.discover(start_dir=label, pattern=self.default_pattern, top_level_dir='.')
-                suite.addTests(tests)
-                pass
             else:  # isfile
-                pass
+                rel_path = os.path.relpath(label_as_path, os.path.abspath('.'))
+                name = os.path.splitext(rel_path)[0].replace(os.path.sep, '.')
+                tests = self.test_loader.loadTestsFromName(name)
+
+            if tests and tests.countTestCases():
+                suite.addTests(tests)
 
         return suite
 
