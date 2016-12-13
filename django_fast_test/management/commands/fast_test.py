@@ -35,18 +35,17 @@ class Command(BaseCommand):
     verbosity = 1
     failfast = False
     default_pattern = 'fast_test*.py'
-    default_test_file = 'app.fast_tests'  # TODO: 指定文件名或patter, 遍历django installed apps
 
     def add_arguments(self, parser):
         parser.add_argument(
             'test_labels',
             nargs='*',
-            help='测试文件,类或方法。例如%s, 默认%s,' % ('app.tests.TestAlgorithm', self.default_test_file),
+            help='测试文件,类或方法。例如%s, 默认该工程加所有%s文件,' % ('app.tests.TestAlgorithm', self.default_pattern),
         )
 
     def build_suite(self, test_labels=None):
         suite = self.test_suite()
-        test_labels = test_labels or [self.default_test_file]
+        test_labels = test_labels or ['.']
 
         for label in test_labels:
             label_as_path = os.path.abspath(label)
