@@ -1,0 +1,16 @@
+<h1 id="django-fast-test">django-fast-test</h1>
+<p><strong>django-fast-test</strong> provides a Django Command fast_test.</p>
+<h2 id="features">Features</h2>
+<ul>
+<li>Django fast_test command.</li>
+</ul>
+<h2 id="installation-usage">Installation &amp; Usage</h2>
+<ol style="list-style-type: decimal">
+<li>Install from code using <code>python setup.py build</code> and then <code>python setup.py install</code>, or using <code>pip install django-fast-test</code>.</li>
+<li>Add <code>'django_fast_storage'</code> to your <code>INSTALLED_APPS</code> setting.</li>
+<li>Run the command by: <code>python manage.py fast_test</code>.</li>
+</ol>
+<h2 id="how-it-works">How it works</h2>
+<p>The fast_test command runs very fast, because it does not create TEST DB and does not run migrations. Directly, it uses the developing db or product db, and the result of operations onto db is really durably committed. So, CAUTIOUSLY use this command.</p>
+<h2 id="support-and-announcements">Support and announcements</h2>
+<p>Downloads and bug tracking can be found at the <a href="http://github.com/liuemngjun/django-fast-test">main project website</a>.</p>
