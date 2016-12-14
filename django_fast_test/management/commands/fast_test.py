@@ -24,7 +24,6 @@ def is_discoverable(label):
 
 class Command(BaseCommand):
     # TODO: 数据库事务处理问题
-    # TODO: pattern参数
     help = '''
     快速测试: 没有数据库migration的单元测试, 区别于django test.
     fast_test: unittest that no run db migrations, differently from django test.
@@ -52,10 +51,18 @@ class Command(BaseCommand):
                  'Can be modulename, modulename.TestCase or modulename.TestCase.test_method\n'
                  'Default all %s files in current project,' % self.default_pattern,
         )
+        parser.add_argument(
+            '--pattern', '-p',
+            dest='pattern',
+            type=str,
+            default=self.default_pattern,
+            help='The test file matching pattern. Defaults to %s.' % self.default_pattern,
+        )
 
-    def build_suite(self, test_labels=None):
+    def build_suite(self, test_labels=None, pattern=None):
         suite = self.test_suite()
         test_labels = test_labels or ['.']
+        pattern = pattern or self.default_pattern
 
         for label in test_labels:
             label_as_path = os.path.abspath(label)
@@ -65,7 +72,7 @@ class Command(BaseCommand):
             if not os.path.exists(label_as_path):
                 tests = self.test_loader.loadTestsFromName(label)
             elif os.path.isdir(label_as_path):
-                tests = self.test_loader.discover(start_dir=label, pattern=self.default_pattern, top_level_dir='.')
+                tests = self.test_loader.discover(start_dir=label, pattern=pattern, top_level_dir='.')
             else:  # isfile
                 rel_path = os.path.relpath(label_as_path, os.path.abspath('.'))
                 name = os.path.splitext(rel_path)[0].replace(os.path.sep, '.')
@@ -91,7 +98,8 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.verbosity = options.get('verbosity', 1)
         test_labels = options.get('test_labels')
+        pattern = options.get('pattern')
         self.init(*args, **options)
-        suite = self.build_suite(test_labels)
+        suite = self.build_suite(test_labels, pattern)
         result = self.run_suite(suite)
         self.deinit()
