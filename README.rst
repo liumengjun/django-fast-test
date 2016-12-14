@@ -13,7 +13,7 @@ Features
 Installation & Usage
 --------------------
 
-1. Install using ``python setup.py build`` and then ``python setup.py install``.
+1. Install from code using ``python setup.py build`` and then ``python setup.py install``, or using ``pip install django-fast-test``.
 2. Add ``'django_fast_storage'`` to your ``INSTALLED_APPS`` setting.
 3. Run the command by: ``python manage.py fast_test``.
 
