@@ -96,7 +96,7 @@ class Command(BaseCommand):
         unittest.removeHandler()
 
     def handle(self, *args, **options):
-        self.verbosity = options.get('verbosity', 1)
+        self.verbosity = int(options.get('verbosity', 1))
         test_labels = options.get('test_labels')
         pattern = options.get('pattern')
         self.init(*args, **options)

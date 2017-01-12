@@ -1,7 +1,7 @@
 import datetime
 import re
 
-from django.utils.timezone import make_aware
+from django.utils.timezone import make_aware, get_current_timezone
 
 _re_number = re.compile(r'^-?\d+')
 
@@ -53,7 +53,7 @@ def parse_date(s, to_aware=True):
     if _re_date_full.match(s):
         d = datetime.datetime.strptime(s, DATE_P_FORMAT_FULL)
     if d is not None and to_aware:
-        return make_aware(d)
+        return make_aware(d, get_current_timezone())
     return d
 
 
