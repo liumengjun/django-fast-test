@@ -1,6 +1,7 @@
 import datetime
 import unittest
 
+from django.test import TestCase
 from django.utils import timezone
 
 from .utils.types import parseInt, parse_date, parse_date_next
@@ -22,3 +23,23 @@ class SimpleTest(unittest.TestCase):
         self.assertEqual(parse_date_next('2016-12-31', False), datetime.datetime(2017,1,1))
         self.assertEqual(parse_date_next('2016-12-08 23:09:25', False), datetime.datetime(2016,12,8,23,9,26))
         self.assertEqual(parse_date_next('2016-12-08 23:09:59', False), datetime.datetime(2016,12,8,23,10,0))
+
+
+class DbTest(TestCase):
+    '''
+    use TestCase to auto rollback after each test method. (see TestCase._fixture_teardown)
+    '''
+
+    def test_db(self):
+        from . import models
+        models.Person.objects.create(name='scott')
+        cnt = models.Person.objects.count()
+        print(cnt)
+        self.assertTrue(cnt >= 1)
+
+    def test_db2(self):
+        from . import models
+        models.Person.objects.create(name='scott')
+        cnt = models.Person.objects.count()
+        print(cnt)
+        self.assertTrue(cnt >= 1)
