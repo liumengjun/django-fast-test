@@ -30,4 +30,4 @@ Support and announcements
 -------------------------
 
 Downloads and bug tracking can be found at the `main project
-website <http://github.com/liuemngjun/django-fast-test>`_.
+website <http://github.com/liumengjun/django-fast-test>`_.

@@ -23,12 +23,11 @@ def is_discoverable(label):
 
 
 class Command(BaseCommand):
-    # TODO: 数据库事务处理问题
     help = '''
     快速测试: 没有数据库migration的单元测试, 区别于django test.
     fast_test: unittest that no run db migrations, differently from django test.
-    但是连接的不是测试数据库, 而是实际开发用的数据库，对于数据库的操作会保留下来.
-    因此最好不要测试含有数据库操作的代码，适用于"工具算法测试"或"第三方API测试".
+    但是连接的不是测试数据库, 而是实际开发用的数据库
+    使用django.test.TestCase时每个测试方法后数据库回滚，否则对于数据库的操作会永久保留.
     '''
     test_suite = unittest.TestSuite
     test_runner = unittest.TextTestRunner
